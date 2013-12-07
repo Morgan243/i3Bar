@@ -3,17 +3,18 @@ exists here:
 http://code.stapelberg.de/git/i3status/tree/contrib/wrapper.py
 
 i3 statusbar wrapper script which currently...
-  -> Removes any items that don't have values (have 'no' or 'down')
+  - Removes any items that don't have values (have 'no' or 'down')
 
-  -> Monitors the Price of BTC in a second thread
-      * Outputs '[BTC<indicators>] $<24h_average_price> ($<current_price)'
-          * Indicators are a string of '-' (for below avg.) and '+' (above avg.)
+  - Monitors the Price of BTC in a second thread
+      - Outputs '[BTC<indicators>] $<24h_average_price> ($<current_price)'
+          - Indicators are a string of '-' (for below avg.) and '+' (above avg.)
           with the string gaining an indicator every hour it is above/below.
-          * A '~' will prepend the output if there is an error fetching the pricing data.
+          - A '~' will prepend the output if there is an error fetching the pricing data.
           The output will remain as the last values retrieved and indicators will not update.  
 
 
 **Usage**
+
   1.) Make sure you have a status bar config. Copy the default from /etc/i3status.conf (may
       vary depending on distro). Doesn't matter you put it (maybe ~/.i3/i3status.conf).
   
