@@ -3,6 +3,9 @@ from urllib import urlopen
 import sys
 import json
 import time
+from bit_mon import BTCMon
+
+btc_mon = BTCMon()
 
 def get_governor():
     """ Get the current governor for cpu0, assuming all CPUs use the same. """
@@ -26,26 +29,13 @@ def read_line():
     # exit on ctrl-c
     except KeyboardInterrupt:
         sys.exit()
+        btc_mon.done = True
+        btc_mon.join()
 
-def getBTC_price():
-    try:
-        weightedprices_url= "http://api.bitcoincharts.com/v1/weighted_prices.json"
-        weightedprices = urlopen(weightedprices_url)
-        weightedprices = json.loads(weightedprices.read())
-        weighted_24 = float(weightedprices["USD"]["24h"])
-
-        currentprices_url = "https://www.bitstamp.net/api/ticker/"
-        currentprices = urlopen(currentprices_url)
-        currentprices = json.loads(currentprices.read())
-        currentprice = float(currentprices["last"])
-
-        color = 0 # red
-
-        return str(currentprice)
-    except:
-        return "ERROR"
 
 if __name__ == '__main__':
+    btc_mon.start()
+
     # Skip the first line which contains the version header.
     print_line(read_line())
 
@@ -58,9 +48,9 @@ if __name__ == '__main__':
         if line.startswith(','):
             line, prefix = line[1:], ','
 
+
         j = json.loads(line)
         # insert information into the start of the json, but could be anywhere
-        # CHANGE THIS LINE TO INSERT SOMETHING ELSE
-        j.insert(0, {'full_text' : 'BTC is $%s' % getBTC_price(), 'name' : 'btc'})
+        j.insert(0, {'full_text' : '[BTC] $%s' % btc_mon.current_price, 'name' : 'btc', 'color' : btc_mon.current_color})
         # and echo back new encoded json
         print_line(prefix+json.dumps(j))
