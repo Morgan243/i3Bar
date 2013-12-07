@@ -15,7 +15,7 @@ i3 status bar (*i3status*) wrapper script which currently...
 **Usage**
 
   1.) Make sure you have a status bar config. Copy the default from /etc/i3status.conf (may
-      vary depending on distro). Doesn't matter you put it (maybe ~/.i3/i3status.conf).
+      vary depending on distro). Doesn't matter where you put it (maybe ~/.i3/i3status.conf).
   
   2.) Make sure the 'general' section at the top of i3status.conf has the following:
 
