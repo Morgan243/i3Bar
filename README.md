@@ -1,4 +1,4 @@
-
+![](screen_shot.png)
 
 i3 status bar (*i3status*) wrapper script which currently...
 
