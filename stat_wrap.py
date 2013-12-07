@@ -37,7 +37,8 @@ def cleanUp(j):
     while found:
         found = False
         for i in xrange(len(j)):
-            if "no" in j[i]["full_text"] or "down" in j[i]["full_text"]:
+            text = j[i]["full_text"]
+            if "no" in text or "down" in text  or "No battery" in text:
                 j.pop(i)
                 found = True
                 break
