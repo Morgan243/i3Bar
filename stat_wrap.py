@@ -32,6 +32,16 @@ def read_line():
         btc_mon.done = True
         btc_mon.join()
 
+def cleanUp(j):
+    found = True
+    while found:
+        found = False
+        for i in xrange(len(j)):
+            if "no" in j[i]["full_text"] or "down" in j[i]["full_text"]:
+                j.pop(i)
+                found = True
+                break
+                
 
 if __name__ == '__main__':
     btc_mon.start()
@@ -50,7 +60,17 @@ if __name__ == '__main__':
 
 
         j = json.loads(line)
+
+        cleanUp(j)
+
         # insert information into the start of the json, but could be anywhere
-        j.insert(0, {'full_text' : '[BTC] $%s' % btc_mon.current_price, 'name' : 'btc', 'color' : btc_mon.current_color})
+        if btc_mon.poll_error:
+            j.insert(0, {'full_text' : '~[BTC%s] $%s ($%s)' 
+                % (btc_mon.indicators, btc_mon.avg_price, btc_mon.current_price), 
+                'name' : 'btc', 'color' : btc_mon.current_color})
+        else:
+            j.insert(0, {'full_text' : '[BTC%s] $%s ($%s)' 
+                % (btc_mon.indicators, btc_mon.avg_price, btc_mon.current_price), 
+                'name' : 'btc', 'color' : btc_mon.current_color})
         # and echo back new encoded json
         print_line(prefix+json.dumps(j))
