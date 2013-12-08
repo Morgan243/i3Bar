@@ -13,6 +13,16 @@ i3 status bar (*i3status*) wrapper script which currently...
 
 
 **Usage**
+Use -h or --help to see usage
+    Usage: stat_wrap.py [options]
+
+    Options:
+      -h, --help            show this help message and exit
+      -w WEATHER_URI, --weather-location=WEATHER_URI
+                            Comma delimited city and state (city,state) for
+                            openweathermap json api
+      -b, --bitcoin-monitor
+                            Get BTC prices from bitcoincharts and bitstamp 
 
   1.) Make sure you have a status bar config. Copy the default from /etc/i3status.conf (may
       vary depending on distro). Doesn't matter where you put it (maybe ~/.i3/i3status.conf).
@@ -25,7 +35,8 @@ i3 status bar (*i3status*) wrapper script which currently...
 
 3.) Change the 'bar' section in the i3 configuration file (usually in ~/.i3/config) to:
 
-    status_command i3status -c /path/to/i3status.conf | /path/to/stat_wrap.py
+    status_command i3status -c /path/to/i3status.conf | /path/to/stat_wrap.py -w Richmond,va -b
+
 
 4.) You can restart i3 in place using Mod+Shift+r (mod is typically alt or windoze key)
   

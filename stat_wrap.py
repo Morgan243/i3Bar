@@ -4,8 +4,10 @@ import sys
 import json
 import time
 from bit_mon import BTCMon
+from weather_mon import WeatherMon    
+from optparse import OptionParser
 
-btc_mon = BTCMon()
+
 
 def get_governor():
     """ Get the current governor for cpu0, assuming all CPUs use the same. """
@@ -29,8 +31,6 @@ def read_line():
     # exit on ctrl-c
     except KeyboardInterrupt:
         sys.exit()
-        btc_mon.done = True
-        btc_mon.join()
 
 def cleanUp(j):
     found = True
@@ -45,7 +45,26 @@ def cleanUp(j):
                 
 
 if __name__ == '__main__':
-    btc_mon.start()
+
+    parser = OptionParser()
+
+    parser.add_option("-w", "--weather-location", dest="WEATHER_URI",
+                        help="Comma delimited city and state (city,state) for openweathermap json api")
+
+    parser.add_option("-b", "--bitcoin-monitor", dest="BTC_ON", default=False, action="store_true",
+                        help="Get BTC prices from bitcoincharts and bitstamp")
+
+    (options, args) = parser.parse_args()
+
+    weath_mon = None
+    btc_mon = None
+
+    if options.WEATHER_URI is not None:
+        weath_mon = WeatherMon(options.WEATHER_URI)
+        weath_mon.start()
+    if options.BTC_ON:
+        btc_mon = BTCMon()
+        btc_mon.start()
 
     # Skip the first line which contains the version header.
     print_line(read_line())
@@ -64,14 +83,23 @@ if __name__ == '__main__':
 
         cleanUp(j)
 
-        # insert information into the start of the json, but could be anywhere
-        if btc_mon.poll_error:
-            j.insert(0, {'full_text' : '~[BTC%s] $%s ($%s)' 
-                % (btc_mon.indicators, btc_mon.avg_price, btc_mon.current_price), 
-                'name' : 'btc', 'color' : btc_mon.current_color})
-        else:
-            j.insert(0, {'full_text' : '[BTC%s] $%s ($%s)' 
-                % (btc_mon.indicators, btc_mon.avg_price, btc_mon.current_price), 
-                'name' : 'btc', 'color' : btc_mon.current_color})
+
+        if btc_mon is not None:
+            # insert information into the start of the json, but could be anywhere
+            if btc_mon.poll_error:
+                j.insert(0, {'full_text' : '~[BTC%s] $%s ($%s)' 
+                    % (btc_mon.indicators, btc_mon.avg_price, btc_mon.current_price), 
+                    'name' : 'btc', 'color' : btc_mon.current_color})
+            else:
+                j.insert(0, {'full_text' : '[BTC%s] $%s ($%s)' 
+                    % (btc_mon.indicators, btc_mon.avg_price, btc_mon.current_price), 
+                    'name' : 'btc', 'color' : btc_mon.current_color})
+
+
+        #insert weather if it is desired
+        if weath_mon is not None:
+            j.insert(0, {'full_text' : '%s' % weath_mon.weather_string, 'name' : 'weather', 
+                    'color' : weath_mon.color})
+
         # and echo back new encoded json
         print_line(prefix+json.dumps(j))

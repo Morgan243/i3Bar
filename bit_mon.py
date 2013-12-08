@@ -45,24 +45,28 @@ class BTCMon(threading.Thread):
     def setColors(self):
         self.price_rat = float(self.current_price) / float(self.avg_price)
 
-        if self.price_rat > 1.0:
+        if self.price_rat == 1.0:
+            self.current_color = "#5b5b4b"
+        elif self.price_rat > 1.0:
             if self.price_rat < 1.001:
-                self.current_color = "#117f11"
+                self.current_color = "#335b33"
             elif self.price_rat < 1.01:
-                self.current_color = "#119011"
+                self.current_color = "#227022"
             elif self.price_rat < 1.1:
-                self.current_color = "#119b11"
+                self.current_color = "#218821"
             elif self.price_rat < 1.2:
-                self.current_color = "#01ab01"
+                self.current_color = "#15a915"
 
         else:
-            if self.price_rat > .99:
-                self.current_color = "#7f1111"
+            if self.price_rat > .999:
+                self.current_color = "#5b3333"
+            elif self.price_rat > .99:
+                self.current_color = "#702222"
             elif self.price_rat > .98:
-                self.current_color = "#901111"
+                self.current_color = "#882121"
             elif self.price_rat > .95:
-                self.current_color = "#b01111"
-
+                self.current_color = "#a91515"
+    
     def getBTC_price(self):
         try:
             #this code courtesy some other fella on GitHub
