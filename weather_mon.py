@@ -10,7 +10,7 @@ class WeatherMon(threading.Thread):
         self.daemon = True
         self.done = False
 
-        self.poll_interval = 5
+        self.poll_interval = 30 
 
         self.location = location
         self.state = location.split(',')[1]
