@@ -44,6 +44,7 @@ class WeatherMon(threading.Thread):
             #self.weather_string = str( ((self.temp_max + self.temp_min)/2.0) - 273.0 ) + 'C'
             self.weather_string = str( self.temp - 273.0 ) + 'C'
             self.weather_string = self.weather_string + " - " + self.weather_desc
+            self.color = "#555555"
         except:
             self.weather_string = "ERROR Fetching Weather!"
             self.color = "#663333"
